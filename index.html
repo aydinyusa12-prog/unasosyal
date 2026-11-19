@@ -1,50 +1,1038 @@
-<!doctype html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#100d18"><title>UN AsosyaL</title>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#100d18">
+<title>UN AsosyaL</title>
 <style>
-:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#100d18;color:#fff;font:15px Arial,sans-serif}button,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:11px 14px;background:#7541b5;color:#fff}.secondary{background:#292139;color:#d8c7f3}.danger{background:#4a253e}.hidden{display:none!important}.wrap{max-width:760px;margin:auto;min-height:100dvh;padding:16px 14px 88px}.brand{font-size:25px;font-weight:bold;color:#bd91ff;margin:8px 0 20px}.card{background:#191426;border:1px solid #302344;border-radius:16px;padding:16px;margin:12px 0}.muted{color:#ae9cbe;font-size:13px}.field{width:100%;padding:13px;margin:6px 0 12px;border:0;border-radius:10px;background:#292139;color:white}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:#191426;border-top:1px solid #302344;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));z-index:5}.tabs button{flex:1;background:transparent;color:#bba9d0;padding:9px 3px;font-size:12px}.tabs button.active{color:#d2aaff}.person,.post,.notif{background:#211a30;border-radius:12px;padding:13px;margin:9px 0}.person{display:flex;justify-content:space-between;align-items:center;gap:8px}.person strong{display:block}.stats{display:flex;justify-content:center;gap:28px;text-align:center;margin:16px}.stats b{display:block;font-size:20px}.stats span{font-size:12px;color:#ae9cbe}.error{color:#ff9cac;min-height:20px}.success{color:#a8e6b2}.post p{white-space:pre-wrap;overflow-wrap:anywhere}.post small{color:#ae9cbe}.chatbox{height:48vh;overflow:auto;background:#15111f;border-radius:12px;padding:10px}.bubble{max-width:82%;background:#292139;border-radius:14px;padding:10px;margin:8px 0;overflow-wrap:anywhere}.mine{margin-left:auto;background:#7541b5}.navhead{display:flex;justify-content:space-between;align-items:center}.pill{font-size:12px;color:#d7b9ff}.toggle{display:flex;align-items:center;gap:8px;margin:12px 0}.tiny{font-size:12px}
-</style></head><body><main class="wrap">
-<div class="brand">UN AsosyaL</div>
-<section id="auth" class="card"><h2 id="authTitle">Giriş yap</h2><div id="registerFields" class="hidden"><input id="displayName" class="field" placeholder="Görünen ad"><input id="username" class="field" placeholder="Kullanıcı adı (3-20 karakter)"></div><input id="email" class="field" type="email" autocomplete="email" placeholder="E-posta adresi"><input id="password" class="field" type="password" autocomplete="current-password" placeholder="Şifre (en az 6 karakter)"><button id="authBtn" style="width:100%">Giriş yap</button><button id="modeBtn" class="secondary" style="width:100%;margin-top:8px">Hesabın yok mu? Kayıt ol</button><p id="authError" class="error"></p><p class="muted tiny">Hesaplar Firebase ile saklanır. Şifren uygulamada düz metin olarak tutulmaz.</p></section>
-<section id="app" class="hidden"><div class="navhead"><h2 id="viewTitle">Akış</h2><button id="logout" class="secondary">Çıkış</button></div>
-<section id="feedView"><div class="card"><textarea id="postText" class="field" rows="3" maxlength="1000" placeholder="Ne paylaşmak istersin?"></textarea><button id="publish">Paylaş</button></div><div id="feedList"></div></section>
-<section id="peopleView" class="hidden"><input id="peopleSearch" class="field" placeholder="Kullanıcı ara"><div id="peopleList"></div></section>
-<section id="profileView" class="hidden"><div class="card" style="text-align:center"><div style="font-size:48px">👤</div><h2 id="myName"></h2><div id="myHandle" class="muted"></div><div class="stats"><div><b id="followers">0</b><span>Takipçi</span></div><div><b id="following">0</b><span>Takip edilen</span></div><div><b id="myPosts">0</b><span>Paylaşım</span></div></div><label class="toggle"><input type="checkbox" id="privateToggle"> Gizli hesap</label><button id="installBtn" class="secondary" style="width:100%">📲 Uygulamayı telefona kur</button><button id="notifyBtn" class="secondary" style="width:100%;margin-top:8px">🔔 Bildirimleri aç</button><p id="profileMsg" class="muted"></p></div><h3>Takip istekleri</h3><div id="requests"></div></section>
-<section id="chatView" class="hidden"><div class="card"><div class="navhead"><strong id="chatWith">Sohbet</strong><button id="backPeople" class="secondary">Kişiler</button></div><div id="chatMessages" class="chatbox"></div><div class="row" style="margin-top:8px"><input id="chatInput" class="field" placeholder="Mesaj yaz..."><button id="sendMsg">Gönder</button></div><p id="chatError" class="error"></p></div></section>
-<section id="noticeView" class="hidden"><div id="noticeList"></div></section>
-</section></main>
-<nav id="tabs" class="tabs hidden"><button data-view="feedView" class="active">🏠<br>Akış</button><button data-view="peopleView">🔎<br>Kişiler</button><button data-view="noticeView">🔔<br>Bildirim</button><button data-view="profileView">👤<br>Profil</button></nav>
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { margin:0; height:100%; }
+body { font-family:Arial,sans-serif; background:#100d18; color:white; }
+.hidden { display:none !important; }
+input,button { font-family:inherit; font-size:16px; }
+
+.auth { min-height:100%; display:grid; place-items:center; padding:20px; }
+.auth-box { width:100%; max-width:380px; background:#191426; border:1px solid #302344; border-radius:16px; padding:28px; }
+.logo { font-size:29px; font-weight:bold; color:#bd91ff; margin-bottom:30px; }
+.auth-box .logo { text-align:center; margin-bottom:6px; }
+.auth-box p.sub { text-align:center; color:#a99bbd; font-size:14px; margin:0 0 18px; }
+.auth-box input { width:100%; padding:14px; border:0; border-radius:10px; background:#292139; color:white; outline:none; margin-bottom:12px; }
+.main-btn { width:100%; padding:14px; border:0; border-radius:10px; background:#7541b5; color:white; cursor:pointer; }
+.alt-btn { width:100%; margin-top:12px; padding:14px; border:1px solid #4b3a6b; border-radius:10px; background:transparent; color:#cdbbea; cursor:pointer; touch-action:manipulation; }
+.switch { text-align:center; margin-top:16px; font-size:14px; color:#a99bbd; }
+.switch a { color:#bd91ff; text-decoration:underline; cursor:pointer; padding:6px; }
+.error { color:#ff8fa3; font-size:14px; min-height:18px; margin-bottom:10px; line-height:1.4; }
+.notice { background:#2a2140; color:#cdbbea; border-radius:10px; padding:12px; font-size:13px; line-height:1.5; margin-bottom:14px; }
+
+.app { display:flex; height:100%; overflow:hidden; }
+.sidebar { width:300px; flex-shrink:0; background:#191426; padding:22px; border-right:1px solid #302344; display:flex; flex-direction:column; min-height:0; }
+.search { width:100%; padding:12px; border:0; border-radius:10px; background:#292139; color:white; outline:none; margin-bottom:22px; }
+.heading { color:#a99bbd; font-size:12px; margin-bottom:12px; }
+.list { flex:1; overflow-y:auto; }
+.person { display:flex; align-items:center; gap:12px; padding:12px; border-radius:12px; cursor:pointer; margin-bottom:8px; }
+.person:hover,.person.active { background:#382653; }
+.avatar { width:42px; height:42px; flex-shrink:0; border-radius:50%; background:linear-gradient(135deg,#a45aff,#5b35a3); display:grid; place-items:center; font-weight:bold; }
+.pname { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pname small { display:block; color:#a99bbd; margin-top:4px; font-size:12px; }
+.me { display:flex; align-items:center; gap:10px; padding-top:14px; margin-top:8px; border-top:1px solid #302344; font-size:13px; color:#b9a9c9; }
+.me span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.me button { background:#292139; color:white; border:0; border-radius:8px; padding:10px 14px; font-size:14px; cursor:pointer; }
+.main { flex:1; display:flex; flex-direction:column; min-width:0; min-height:0; }
+.topbar { min-height:70px; display:flex; align-items:center; gap:12px; padding:12px 20px; border-bottom:1px solid #302344; background:#171220; }
+.topbar small { color:#b9a9c9; }
+.back { display:none; background:#292139; color:white; border:0; border-radius:10px; width:42px; height:42px; cursor:pointer; }
+.messages { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:14px; }
+.message { padding:12px 15px; border-radius:15px; max-width:80%; line-height:1.5; background:#292139; align-self:flex-start; word-break:break-word; }
+.message.mine { background:#7541b5; align-self:flex-end; }
+.message small { display:block; opacity:.65; font-size:10px; margin-top:6px; }
+.empty { color:#a99bbd; margin:auto; text-align:center; padding:10px; line-height:1.5; }
+.input-area { display:flex; gap:10px; padding:14px; padding-bottom:calc(14px + env(safe-area-inset-bottom, 0px)); background:#191426; border-top:1px solid #302344; }
+.input-area input { flex:1; min-width:0; padding:14px; border:0; border-radius:12px; background:#292139; color:white; outline:none; }
+.action { border:0; border-radius:12px; padding:0 20px; color:white; background:#7541b5; cursor:pointer; }
+
+@media(max-width:700px) {
+  .sidebar { width:100%; border-right:0; padding:18px; padding-top:calc(18px + env(safe-area-inset-top, 0px)); }
+  .main { display:none; width:100%; }
+  .app.chat-open .sidebar { display:none; }
+  .app.chat-open .main { display:flex; }
+  .back { display:block; }
+  .topbar { padding-top:calc(12px + env(safe-area-inset-top, 0px)); }
+}
+.tabs{display:flex;gap:8px;margin-bottom:18px}
+.tab{flex:1;padding:11px;border:0;border-radius:10px;background:#292139;color:#cdbbea;cursor:pointer;font-size:15px;touch-action:manipulation}
+.tab.active{background:#7541b5;color:white}
+.feed{display:none;flex:1;flex-direction:column;min-width:0;min-height:0}
+.app.feed-open .main{display:none}
+.app.feed-open .feed{display:flex}
+.feed-scroll{flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.composer{background:#191426;border:1px solid #302344;border-radius:14px;padding:14px;margin-bottom:16px}
+.composer textarea{width:100%;min-height:80px;resize:vertical;padding:12px;border:0;border-radius:10px;background:#292139;color:white;outline:none;font-family:inherit;font-size:16px}
+.composer-row{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.composer-row .grow{flex:1}
+.photo-btn,.small-btn{border:0;border-radius:12px;padding:12px 14px;background:#292139;color:#cdbbea;font-size:14px;cursor:pointer}
+.composer .action{padding:12px 22px}
+.composer .error{margin:8px 0 0;min-height:0}
+.post{background:#191426;border:1px solid #302344;border-radius:14px;padding:14px;margin-bottom:14px}
+.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.post-head .avatar{width:36px;height:36px}
+.post-head small{color:#a99bbd;display:block;font-size:12px;margin-top:2px}
+.post-text{line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.post-img{width:100%;max-height:480px;object-fit:cover;border-radius:12px;margin-top:10px;display:block}
+.post-actions{display:flex;gap:10px;margin-top:12px}
+.post-actions button{border:0;background:#292139;color:#cdbbea;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer}
+.post-actions button.liked{background:#5b2a6e;color:#ffb3d9}
+@media(max-width:700px){.feed{width:100%}.app.feed-open .sidebar{display:none}.feed .topbar{padding-top:calc(12px + env(safe-area-inset-top,0px))}}
+.app{flex-direction:column}
+.panes{flex:1;display:flex;min-height:0;overflow:hidden}
+.bottom-nav{display:flex;flex-shrink:0;background:#191426;border-top:1px solid #302344;padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav-btn{flex:1;border:0;background:transparent;color:#a99bbd;padding:9px 4px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;touch-action:manipulation}
+.nav-btn .ic{font-size:22px;line-height:1}
+.nav-btn.active{color:#bd91ff}
+.profile{display:none;flex:1;flex-direction:column;min-width:0;min-height:0}
+.app.profile-open .main,.app.profile-open .feed{display:none}
+.app.profile-open .profile{display:flex}
+.profile-card{background:#191426;border:1px solid #302344;border-radius:16px;padding:24px;text-align:center;margin-bottom:16px}
+.avatar.big{width:84px;height:84px;font-size:34px;margin:0 auto 14px}
+.prof-name{font-size:22px;font-weight:bold}
+.prof-sub{color:#a99bbd;margin-top:4px;word-break:break-all}
+.stats{display:flex;justify-content:center;gap:36px;margin-top:20px}
+.stats b{display:block;font-size:20px}
+.stats span{color:#a99bbd;font-size:13px}
+.main-btn.danger{background:#3a2342;color:#ffb3c6}
+@media(max-width:700px){.app.chat-open .bottom-nav{display:none}.profile{width:100%}.app.profile-open .sidebar{display:none}.profile .topbar{padding-top:calc(12px + env(safe-area-inset-top,0px))}}
+.explore{display:none;flex:1;flex-direction:column;min-width:0;min-height:0}
+.app.explore-open .main,.app.explore-open .feed,.app.explore-open .profile{display:none}
+.app.explore-open .explore{display:flex}
+.explore .search{margin-bottom:16px}
+@media(max-width:700px){.explore{width:100%}.app.explore-open .sidebar{display:none}.explore .topbar{padding-top:calc(12px + env(safe-area-inset-top,0px))}}
+.icon-btn{border:0;border-radius:12px;width:46px;flex-shrink:0;background:#292139;color:white;font-size:20px;cursor:pointer;display:grid;place-items:center;touch-action:manipulation}
+.icon-btn:active{background:#382653}
+.icon-btn.recording{background:#7a2340}
+.msg-img{display:block;max-width:100%;max-height:320px;border-radius:10px;margin-bottom:6px}
+.msg-audio{display:block;width:230px;max-width:100%;height:38px;margin-bottom:4px}
+.rec-bar{display:flex;align-items:center;gap:12px}
+.rec-bar .grow{flex:1}
+.rec-dot{color:#ff5c7a;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.25}}
+.chat-note{background:#3a2a14;color:#ffd699;font-size:13px;padding:8px 14px;text-align:center}
+.file-btn,.photo-btn{position:relative;overflow:hidden}
+.file-btn input,.photo-btn input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0;padding:0;margin:0}
+.perm-overlay{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:20px;z-index:50}
+.perm-box{width:100%;max-width:360px;background:#191426;border:1px solid #302344;border-radius:18px;padding:24px;text-align:center}
+.perm-ic{font-size:44px;margin-bottom:8px}
+.perm-box h3{margin:0 0 10px;font-size:20px}
+.perm-box p{color:#cdbbea;line-height:1.5;font-size:15px;margin:0 0 14px}
+.perm-box ol{text-align:left;color:#cdbbea;line-height:1.5;font-size:14px;padding-left:20px;margin:0 0 16px}
+.mic-btn{position:relative;overflow:hidden}
+.mic-btn input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;font-size:0;padding:0;margin:0;pointer-events:none}
+.mic-btn.native input{pointer-events:auto}
+.pick-btn{display:block;position:relative;overflow:hidden;text-align:center;margin-bottom:10px;cursor:pointer;color:white}
+.alt-btn.pick-btn{color:#cdbbea;margin-top:0}
+.pick-btn input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;font-size:0;padding:0;margin:0;cursor:pointer}
+.sheet{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.sheet-box{width:100%;max-width:420px;background:#191426;border:1px solid #302344;border-radius:18px 18px 0 0;padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.sheet-title{text-align:center;font-weight:bold;margin-bottom:14px}
+.sheet-note{color:#ffd699;font-size:13px;line-height:1.5;margin:0 0 12px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="auth" id="authScreen">
+  <form class="auth-box" id="authForm">
+    <div class="logo">UN AsosyaL</div>
+    <p class="sub" id="authSub">Hesabına giriş yap</p>
+    <div class="notice">Çevrimiçi hesap: kayıt ve giriş doğrudan bu uygulamada yapılır. Mesajlar ve paylaşımlar çevrimiçi saklanır.</div>
+    <input id="nameInput" class="hidden" placeholder="Görünen adın" autocomplete="nickname">
+    <input id="userInput" placeholder="Kullanıcı adı (küçük harf, rakam)" autocomplete="username" autocapitalize="none">
+    <input id="passInput" type="password" placeholder="Şifre (en az 6 karakter)" autocomplete="current-password">
+    <div class="error" id="authError"></div>
+    <button class="main-btn" id="authBtn" type="button">Giriş yap</button>
+    <button class="alt-btn" id="switchBtn" type="button">Hesabın yok mu? Kayıt ol</button>
+  </form>
+</div>
+
+<div class="app hidden" id="appScreen">
+  <div class="panes">
+  <aside class="sidebar">
+    <div class="logo">UN AsosyaL</div>
+    <input class="search" placeholder="Kişi ara..." id="search">
+    <div class="heading">KİŞİLER</div>
+    <div class="list" id="userList"></div>
+    <div class="me">
+      <span id="meName"></span>
+      <button id="logoutBtn" type="button">Çıkış</button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <button class="back" id="backBtn" type="button" aria-label="Geri">←</button>
+      <div>
+        <strong id="chatName">Bir kişi seç</strong>
+        <small style="display:block">UN AsosyaL sohbeti</small>
+      </div>
+    </header>
+    <section class="messages" id="messages">
+      <div class="empty">Sohbet başlatmak için bir kişi seç.</div>
+    </section>
+    <div class="chat-note hidden" id="chatNote"></div>
+    <form class="input-area" id="messageForm">
+      <button class="icon-btn" id="photoBtn" type="button" aria-label="Fotoğraf gönder">📷</button>
+      <button class="icon-btn" id="micBtn" type="button" aria-label="Sesli mesaj">🎙</button>
+      <input id="messageInput" placeholder="Mesajını yaz..." autocomplete="off" disabled>
+      <button class="action" id="sendBtn" type="button" aria-label="Gönder">➤</button>
+    </form>
+    <div class="input-area rec-bar hidden" id="recBar">
+      <span class="rec-dot">●</span><span id="recTime">0:00</span><span class="grow"></span>
+      <button class="small-btn" id="recCancel" type="button">İptal</button>
+      <button class="action" id="recSend" type="button">Gönder</button>
+    </div>
+  </main>
+  <section class="feed" id="feedPane">
+    <header class="topbar">
+      <button class="back" id="feedBack" type="button" aria-label="Geri">←</button>
+      <div>
+        <strong>Akış</strong>
+        <small style="display:block">Haberler ve fotoğraflar</small>
+      </div>
+    </header>
+    <div class="feed-scroll">
+      <div class="composer">
+        <textarea id="postText" placeholder="Haber veya düşüncelerini paylaş..." maxlength="1000"></textarea>
+        <img id="postPreview" class="post-img hidden" alt="Seçilen fotoğraf">
+        <div class="composer-row">
+          <label class="photo-btn">📷 Fotoğraf<input type="file" id="postFile" accept="image/*"></label>
+          <button type="button" class="small-btn hidden" id="removePhoto">Kaldır</button>
+          <span class="grow"></span>
+          <button type="button" class="action" id="postBtn">Paylaş</button>
+        </div>
+        <div class="error" id="postError"></div>
+      </div>
+      <div id="postList"></div>
+    </div>
+  </section>
+  <section class="profile" id="profilePane">
+    <header class="topbar">
+      <div>
+        <strong>Profil</strong>
+        <small style="display:block">Hesabın</small>
+      </div>
+    </header>
+    <div class="feed-scroll">
+      <div class="profile-card">
+        <div class="avatar big" id="profAvatar"></div>
+        <div class="prof-name" id="profName"></div>
+        <div class="prof-sub" id="profSub"></div>
+        <div class="stats">
+          <div><b id="statPosts">0</b><span>Paylaşım</span></div>
+          <div><b id="statLikes">0</b><span>Beğeni</span></div>
+        </div>
+      </div>
+      <button class="main-btn danger" id="profLogout" type="button">Çıkış yap</button>
+    </div>
+  </section>
+  <section class="explore" id="explorePane">
+    <header class="topbar">
+      <div>
+        <strong>Bakış</strong>
+        <small style="display:block">Başkalarının paylaşımları</small>
+      </div>
+    </header>
+    <div class="feed-scroll">
+      <input class="search" id="exploreSearch" placeholder="Paylaşım veya kişi ara..." autocomplete="off">
+      <div id="exploreList"></div>
+    </div>
+  </section>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-btn" id="tabProfile" type="button"><span class="ic">👤</span>Profil</button>
+    <button class="nav-btn active" id="tabChats" type="button"><span class="ic">💬</span>Mesajlar</button>
+    <button class="nav-btn" id="tabFeed" type="button"><span class="ic">📰</span>Akış</button>
+    <button class="nav-btn" id="tabExplore" type="button"><span class="ic">🔎</span>Bakış</button>
+  </nav>
+</div>
+
+<!-- Fotoğraf seçenekleri -->
+<div class="sheet hidden" id="photoSheet">
+  <div class="sheet-box">
+    <div class="sheet-title">Fotoğraf gönder</div>
+    <label class="main-btn pick-btn">📸 Kamerayla çek<input type="file" id="camFile" accept="image/*" capture="environment"></label>
+    <label class="alt-btn pick-btn">🖼 Galeriden seç<input type="file" id="chatFile" accept="image/*"></label>
+    <p class="sheet-note hidden" id="sheetNote">Seçici açılmıyorsa bu sayfa uygulama içi önizlemede açıktır. Önizlemeler dosya ve kamera seçmeyi engelleyebilir. Sayfayı Chrome'da kendi adresinden aç.</p>
+    <button class="alt-btn" id="sheetClose" type="button" style="margin-top:0">Vazgeç</button>
+  </div>
+</div>
+<!-- Mikrofon izin paneli -->
+<div class="perm-overlay hidden" id="permPanel">
+  <div class="perm-box">
+    <div class="perm-ic">🎙</div>
+    <h3 id="permTitle">Mikrofon izni</h3>
+    <p id="permText"></p>
+    <ol id="permSteps" class="hidden"></ol>
+    <button class="main-btn" id="permAllow" type="button">İzin ver</button>
+    <button class="alt-btn" id="permClose" type="button">Vazgeç</button>
+  </div>
+</div>
 <script type="module">
-import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js';
-import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
-import {getFirestore,doc,setDoc,getDoc,collection,getDocs,query,where,addDoc,onSnapshot,updateDoc,deleteDoc,serverTimestamp,orderBy,limit} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js';
-const firebaseConfig={apiKey:'AIzaSyCSzI5YqvlYezCWsHCfUDEr6sDWf6al4bw',authDomain:'un-asosyal.firebaseapp.com',projectId:'un-asosyal',storageBucket:'un-asosyal.firebasestorage.app',messagingSenderId:'176707085650',appId:'1:176707085650:web:1a8a7ec17e63bee327c68b'};
-const appFB=initializeApp(firebaseConfig),auth=getAuth(appFB),db=getFirestore(appFB);const $=id=>document.getElementById(id);let registering=false,me=null,chatUser=null,unsubChat=null,installPrompt=null,unsubNotices=null;
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function msg(e){return e?.code==='auth/email-already-in-use'?'Bu e-posta zaten kayıtlı.':e?.code==='auth/invalid-credential'?'E-posta veya şifre hatalı.':e?.code==='auth/weak-password'?'Şifre en az 6 karakter olmalı.':e?.code==='auth/too-many-requests'?'Çok fazla deneme yapıldı; biraz sonra tekrar dene.':e?.message||'Bir hata oluştu.'}
-$('modeBtn').onclick=()=>{registering=!registering;$('registerFields').classList.toggle('hidden',!registering);$('authTitle').textContent=registering?'Hesap oluştur':'Giriş yap';$('authBtn').textContent=registering?'Kayıt ol':'Giriş yap';$('modeBtn').textContent=registering?'Zaten hesabın var mı? Giriş yap':'Hesabın yok mu? Kayıt ol';$('authError').textContent='';$('password').autocomplete=registering?'new-password':'current-password'};
-$('authBtn').onclick=async()=>{const email=$('email').value.trim().toLowerCase(),password=$('password').value; $('authError').textContent='';try{if(!email||!password)throw Error('E-posta ve şifre gerekli.');if(registering){const username=$('username').value.trim().toLowerCase(),displayName=$('displayName').value.trim();if(!/^[a-z0-9_.]{3,20}$/.test(username))throw Error('Kullanıcı adı 3-20 karakter olmalı; harf, rakam, _ ve . kullan.');if(!displayName)throw Error('Görünen adını yaz.');const taken=await getDoc(doc(db,'usernames',username));if(taken.exists())throw Error('Bu kullanıcı adı alınmış.');const cred=await createUserWithEmailAndPassword(auth,email,password);await setDoc(doc(db,'users',cred.user.uid),{uid:cred.user.uid,email,username,displayName,private:false,createdAt:serverTimestamp()});await setDoc(doc(db,'usernames',username),{uid:cred.user.uid});}else await signInWithEmailAndPassword(auth,email,password);}catch(e){$('authError').textContent=msg(e)}};
-onAuthStateChanged(auth,async user=>{if(!user){me=null;$('auth').classList.remove('hidden');$('app').classList.add('hidden');$('tabs').classList.add('hidden');if(unsubNotices)unsubNotices();return}const snap=await getDoc(doc(db,'users',user.uid));if(!snap.exists()){$('authError').textContent='Kullanıcı profili bulunamadı.';return}me={uid:user.uid,...snap.data()};$('auth').classList.add('hidden');$('app').classList.remove('hidden');$('tabs').classList.remove('hidden');await refreshAll();listenNotices();show('feedView')});
-$('logout').onclick=()=>signOut(auth);
-function show(id){['feedView','peopleView','profileView','chatView','noticeView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));$('viewTitle').textContent=({feedView:'Akış',peopleView:'Kişiler',profileView:'Profil',chatView:'Mesajlar',noticeView:'Bildirimler'})[id];document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));}
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.view));
-async function refreshAll(){await Promise.all([loadFeed(),loadPeople(),loadProfile()])}
-async function allUsers(){const s=await getDocs(collection(db,'users'));return s.docs.map(d=>({uid:d.id,...d.data()})).filter(u=>u.uid!==me.uid)}
-async function followData(uid){const [a,b]=await Promise.all([getDocs(query(collection(db,'follows'),where('follower','==',uid))),getDocs(query(collection(db,'follows'),where('following','==',uid)))]);return {following:a.docs.map(d=>d.data().following),followers:b.docs.map(d=>d.data().follower)}}
-async function loadPeople(){const users=await allUsers(),mine=await followData(me.uid);const requests=await getDocs(query(collection(db,'followRequests'),where('to','==',me.uid)));const reqSet=new Set(requests.docs.map(d=>d.data().from));const search=$('peopleSearch').value.toLowerCase();$('peopleList').innerHTML='';for(const u of users.filter(x=>(x.username+' '+x.displayName).toLowerCase().includes(search))){const isFollowing=mine.following.includes(u.uid),isFollower=mine.followers.includes(u.uid),requestSent=reqSet.has(u.uid);const row=document.createElement('div');row.className='person';const action=u.private?(isFollowing?'<button data-unfollow>Takipten çık</button>':requestSent?'<button class="secondary" disabled>İstek gönderildi</button>':'<button data-follow>İstek gönder</button>'):(isFollowing?'<button data-unfollow>Takipten çık</button>':'<button data-follow>Takip et</button>');row.innerHTML=`<div><strong>${esc(u.displayName)}</strong><span class="muted">@${esc(u.username)} ${isFollower?'· Seni takip ediyor':''}</span></div><div>${action} <button class="secondary" data-profile>Profil</button></div>`;row.querySelector('[data-follow]')?.addEventListener('click',()=>follow(u));row.querySelector('[data-unfollow]')?.addEventListener('click',()=>unfollow(u));row.querySelector('[data-profile]')?.addEventListener('click',()=>viewUser(u));$('peopleList').append(row)}}
-$('peopleSearch').oninput=()=>loadPeople();
-async function notify(to,type,text,from=me.uid){await addDoc(collection(db,'notifications'),{to,from,type,text,read:false,createdAt:serverTimestamp()})}
-async function follow(u){try{if(u.private){await addDoc(collection(db,'followRequests'),{from:me.uid,to:u.uid,createdAt:serverTimestamp()});await notify(u.uid,'request',me.displayName+' takip isteği gönderdi.')}else{await setDoc(doc(db,'follows',me.uid+'_'+u.uid),{follower:me.uid,following:u.uid,createdAt:serverTimestamp()});await notify(u.uid,'follow',me.displayName+' seni takip etmeye başladı.')}await loadPeople();await loadProfile()}catch(e){alert(msg(e))}}
-async function unfollow(u){await deleteDoc(doc(db,'follows',me.uid+'_'+u.uid));await loadPeople();await loadProfile()}
-async function viewUser(u){const counts=await followData(u.uid),mine=await followData(me.uid),following=mine.following.includes(u.uid);if(u.private&&!following){alert('Bu hesap gizli. Paylaşımlarını görmek için takip isteği göndermelisin.');return}const canMessage=following&&counts.following.includes(me.uid);if(canMessage){openChat(u);return}alert('Mesaj göndermek için birbirinizi takip etmeniz gerekiyor.');}
-async function loadProfile(){const counts=await followData(me.uid),posts=await getDocs(query(collection(db,'posts'),where('uid','==',me.uid)));$('myName').textContent=me.displayName;$('myHandle').textContent='@'+me.username;$('followers').textContent=counts.followers.length;$('following').textContent=counts.following.length;$('myPosts').textContent=posts.size;$('privateToggle').checked=!!me.private;const rq=await getDocs(query(collection(db,'followRequests'),where('to','==',me.uid)));$('requests').innerHTML='';for(const d of rq.docs){const r=d.data(),us=await getDoc(doc(db,'users',r.from));if(!us.exists())continue;const u=us.data(),el=document.createElement('div');el.className='person';el.innerHTML=`<span><b>${esc(u.displayName)}</b><small class="muted"> @${esc(u.username)}</small></span><button>Kabul et</button>`;el.querySelector('button').onclick=async()=>{await setDoc(doc(db,'follows',r.from+'_'+me.uid),{follower:r.from,following:me.uid,createdAt:serverTimestamp()});await deleteDoc(d.ref);await notify(r.from,'accepted',me.displayName+' takip isteğini kabul etti.');loadProfile();loadPeople()};$('requests').append(el)}}
-$('privateToggle').onchange=async()=>{me.private=$('privateToggle').checked;await updateDoc(doc(db,'users',me.uid),{private:me.private});$('profileMsg').textContent=me.private?'Hesabın artık gizli.':'Hesabın herkese açık.';};
-$('publish').onclick=async()=>{const text=$('postText').value.trim();if(!text)return;try{await addDoc(collection(db,'posts'),{uid:me.uid,username:me.username,displayName:me.displayName,text,createdAt:serverTimestamp()});$('postText').value='';await loadFeed();await loadProfile()}catch(e){alert(msg(e))}};
-async function loadFeed(){const s=await getDocs(query(collection(db,'posts'),orderBy('createdAt','desc'),limit(60)));const follows=await followData(me.uid);$('feedList').innerHTML='';for(const d of s.docs){const p=d.data();if(p.uid!==me.uid&&!follows.following.includes(p.uid)){const us=await getDoc(doc(db,'users',p.uid));if(us.exists()&&us.data().private)continue}const el=document.createElement('article');el.className='post';el.innerHTML=`<b>${esc(p.displayName||'Kullanıcı')}</b> <small>@${esc(p.username||'')}</small><p>${esc(p.text)}</p><small>${p.createdAt?.toDate?.().toLocaleString('tr-TR')||'Yeni paylaşım'}</small>`;$('feedList').append(el)}}
-async function openChat(u){const counts=await followData(u.uid),mine=await followData(me.uid);if(!mine.following.includes(u.uid)||!counts.following.includes(me.uid)){alert('Mesaj göndermek için karşılıklı takip gerekiyor.');return}chatUser=u;$('chatWith').textContent=u.displayName+' (@'+u.username+')';show('chatView');if(unsubChat)unsubChat();const ids=[me.uid,u.uid].sort(),cid=ids.join('_');unsubChat=onSnapshot(query(collection(db,'chats',cid,'messages'),orderBy('createdAt','asc')),s=>{$('chatMessages').innerHTML='';s.forEach(d=>{const m=d.data(),el=document.createElement('div');el.className='bubble '+(m.from===me.uid?'mine':'');el.textContent=m.text;$('chatMessages').append(el)});$('chatMessages').scrollTop=$('chatMessages').scrollHeight})}
-$('sendMsg').onclick=async()=>{const text=$('chatInput').value.trim();if(!text||!chatUser)return;const counts=await followData(chatUser.uid),mine=await followData(me.uid);if(!mine.following.includes(chatUser.uid)||!counts.following.includes(me.uid)){$('chatError').textContent='Artık karşılıklı takip etmiyorsunuz; mesaj gönderilemez.';return}const cid=[me.uid,chatUser.uid].sort().join('_');await addDoc(collection(db,'chats',cid,'messages'),{from:me.uid,to:chatUser.uid,text,createdAt:serverTimestamp()});await notify(chatUser.uid,'message',me.displayName+' sana mesaj gönderdi.');$('chatInput').value='';$('chatError').textContent=''};
-$('backPeople').onclick=()=>show('peopleView');
-function listenNotices(){if(unsubNotices)unsubNotices();unsubNotices=onSnapshot(query(collection(db,'notifications'),where('to','==',me.uid),orderBy('createdAt','desc'),limit(40)),s=>{$('noticeList').innerHTML='';s.forEach(d=>{const n=d.data(),el=document.createElement('div');el.className='notif';el.textContent=n.text||'Yeni bildirim';$('noticeList').append(el);if(!n.read&&Notification.permission==='granted'){new Notification('UN AsosyaL',{body:n.text||'Yeni bildirim'});beep()}})})}
-function beep(){try{const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.05;o.start();o.stop(c.currentTime+.12);o.onended=()=>c.close()}catch{}}
-$('notifyBtn').onclick=async()=>{if(!('Notification'in window)){$('profileMsg').textContent='Bu tarayıcı bildirimleri desteklemiyor.';return}const p=await Notification.requestPermission();$('profileMsg').textContent=p==='granted'?'Bildirim izni verildi.':'Bildirim izni verilmedi.';if(p==='granted')new Notification('UN AsosyaL',{body:'Bildirimler açıldı!'});};
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e});$('installBtn').onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null}else{$('profileMsg').textContent='Chrome menüsünden “Ana ekrana ekle” veya “Uygulamayı yükle” seçeneğini kullan.'}};
-</script></body></html>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, collection, query, orderBy, limit, onSnapshot, arrayUnion, arrayRemove, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCSzI5YqvlYezCWsHCfUDEr6sDWf6al4bw",
+  authDomain: "un-asosyal.firebaseapp.com",
+  projectId: "un-asosyal",
+  storageBucket: "un-asosyal.firebasestorage.app",
+  messagingSenderId: "176707085650",
+  appId: "1:176707085650:web:1a8a7ec17e63bee327c68b"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* Kayıt: localStorage çalışmazsa bellekte tutar */
+  var mem = {};
+  var store = {
+    get: function (k, d) {
+      try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }
+      catch (e) { return k in mem ? mem[k] : d; }
+    },
+    set: function (k, v) {
+      try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { mem[k] = v; }
+    }
+  };
+
+  function hash(str) {
+    var h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ c, 2654435761);
+      h2 = Math.imul(h2 ^ c, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16);
+  }
+
+  var DEMO = [
+    { id: "demo:mert", name: "Mert", hint: "Demo kişi" },
+    { id: "demo:ahmet", name: "Ahmet", hint: "Demo kişi" },
+    { id: "demo:ece", name: "Ece", hint: "Demo kişi" }
+  ];
+
+  var me = null;        // {username, name}
+  var activeId = null;  // sohbet yapılan kişinin id'si
+  var register = false;
+
+  /* ---------- Giriş / Kayıt ---------- */
+  function setMode(reg) {
+    register = reg;
+    $("nameInput").classList.toggle("hidden", !reg);
+    $("authSub").textContent = reg ? "Yeni hesap oluştur" : "Hesabına giriş yap";
+    $("authBtn").textContent = reg ? "Kayıt ol" : "Giriş yap";
+    $("passInput").autocomplete = reg ? "new-password" : "current-password";
+    $("switchBtn").textContent = reg ? "Zaten hesabın var mı? Giriş yap" : "Hesabın yok mu? Kayıt ol";
+    $("authError").textContent = "";
+  }
+  $("switchBtn").addEventListener("click", function () { setMode(!register); });
+
+  // Beklenmeyen bir hata olursa ekranda göster
+  window.onerror = function (msg) { $("authError").textContent = "Hata: " + msg; };
+
+  function showErr(msg) {
+    $("authError").textContent = msg;
+  }
+
+  function cleanUser(v) {
+    var map = { "ç": "c", "ğ": "g", "ı": "i", "ö": "o", "ş": "s", "ü": "u", "â": "a", "î": "i", "û": "u" };
+    return v.toLocaleLowerCase("tr").replace(/\s+/g, "").replace(/[çğıöşüâîû]/g, function (ch) { return map[ch]; });
+  }
+
+  function usernameEmail(username) { return username + "@un-asosyal.app"; }
+
+  async function doAuth() {
+    try {
+      var username = cleanUser($("userInput").value);
+      var pass = $("passInput").value;
+      $("authError").textContent = "";
+
+      if (!username) { showErr("Kullanıcı adı yaz."); return; }
+      if (!pass) { showErr("Şifre yaz."); return; }
+      if (!/^[a-z0-9_.]{3,30}$/.test(username)) {
+        showErr("Kullanıcı adı 3-30 karakter olmalı; harf, rakam, _ ve . kullan."); return;
+      }
+      var email = usernameEmail(username);
+
+      if (register) {
+        var name = $("nameInput").value.trim() || username;
+        if (pass.length < 6) { showErr("Şifre en az 6 karakter olmalı."); return; }
+        var usernameRef = doc(db, "usernames", username);
+        var usernameSnap = await getDoc(usernameRef);
+        if (usernameSnap.exists()) { showErr("Bu kullanıcı adı zaten alınmış. Giriş yapmayı dene."); return; }
+        var credential = await createUserWithEmailAndPassword(auth, email, pass);
+        await setDoc(doc(db, "users", credential.user.uid), {
+          username: username,
+          name: name,
+          createdAt: serverTimestamp()
+        });
+        await setDoc(usernameRef, { uid: credential.user.uid });
+        login(username, name);
+      } else {
+        var credential = await signInWithEmailAndPassword(auth, email, pass);
+        var profileSnap = await getDoc(doc(db, "users", credential.user.uid));
+        if (!profileSnap.exists()) { showErr("Hesap profili bulunamadı. Destek için uygulama sahibine ulaş."); return; }
+        var profile = profileSnap.data();
+        login(profile.username || username, profile.name || username);
+      }
+    } catch (err) {
+      var code = err && err.code ? err.code : "";
+      var messages = {
+        "auth/email-already-in-use": "Bu kullanıcı adı zaten kayıtlı.",
+        "auth/invalid-credential": "Kullanıcı adı veya şifre hatalı.",
+        "auth/user-not-found": "Bu kullanıcı adıyla hesap yok. Önce kayıt ol.",
+        "auth/wrong-password": "Şifre hatalı.",
+        "auth/weak-password": "Şifre en az 6 karakter olmalı.",
+        "auth/network-request-failed": "İnternet bağlantını kontrol et.",
+        "permission-denied": "Sunucu erişim izni yok. Lütfen daha sonra tekrar dene."
+      };
+      showErr(messages[code] || ("Giriş yapılamadı: " + (err && err.message ? err.message : err)));
+    }
+  }
+
+  $("authForm").addEventListener("submit", function (e) { e.preventDefault(); doAuth(); });
+  $("authBtn").addEventListener("click", function (e) { e.preventDefault(); doAuth(); });
+
+  function login(username, name) {
+    me = { username: username, name: name || username };
+    $("authScreen").classList.add("hidden");
+    $("appScreen").classList.remove("hidden");
+    $("meName").textContent = me.name;
+    $("passInput").value = "";
+    activeId = null;
+    $("messageInput").disabled = true;
+    $("chatName").textContent = "Bir kişi seç";
+    $("messages").innerHTML = '<div class="empty">Sohbet başlatmak için bir kişi seç.</div>';
+    $("appScreen").classList.remove("chat-open");
+    renderContacts();
+    showFeed(false);
+    loadUsers();
+    startPosts();
+    if (usersTimer) clearInterval(usersTimer);
+    usersTimer = setInterval(loadUsers, 20000);
+  }
+
+  $("logoutBtn").onclick = async function () {
+    try { await signOut(auth); } catch (e) { showErr("Çıkış yapılamadı: " + e.message); return; }
+    if (unsubChat) { unsubChat(); unsubChat = null; }
+    if (unsubPosts) { unsubPosts(); unsubPosts = null; }
+    if (usersTimer) { clearInterval(usersTimer); usersTimer = null; }
+    allPosts = []; chatMsgs = []; onlineUsers = [];
+    me = null; activeId = null;
+    setMode(false);
+    showFeed(false);
+    $("appScreen").classList.add("hidden");
+    $("appScreen").classList.remove("chat-open");
+    $("authScreen").classList.remove("hidden");
+  };
+  $("backBtn").onclick = function () { $("appScreen").classList.remove("chat-open"); };
+
+  /* ---------- Kişiler ---------- */
+  var onlineUsers = [];
+  var usersTimer = null;
+  async function loadUsers() {
+    if (!me) return;
+    try {
+      var snap = await getDocs(collection(db, "users"));
+      var list = [];
+      snap.forEach(function (d) {
+        var u = d.data();
+        if (u.username && u.username !== me.username) list.push({ id: "u:" + u.username, name: u.name || u.username, hint: "@" + u.username });
+      });
+      list.sort(function (a, b) { return a.name.localeCompare(b.name, "tr"); });
+      onlineUsers = list;
+      renderContacts();
+    } catch (e) { /* sessizce geç */ }
+  }
+  function contacts() { return onlineUsers.slice(); }
+
+  function renderContacts() {
+    var box = $("userList");
+    box.innerHTML = "";
+    contacts().forEach(function (c) {
+      var el = document.createElement("div");
+      el.className = "person" + (c.id === activeId ? " active" : "");
+      el.dataset.id = c.id;
+      var av = document.createElement("div");
+      av.className = "avatar";
+      av.textContent = c.name.charAt(0).toLocaleUpperCase("tr");
+      var nm = document.createElement("div");
+      nm.className = "pname";
+      nm.textContent = c.name;
+      var sm = document.createElement("small");
+      sm.textContent = c.hint;
+      nm.appendChild(sm);
+      el.append(av, nm);
+      el.onclick = function () { selectChat(c); };
+      box.appendChild(el);
+    });
+    applySearch();
+  }
+
+  function applySearch() {
+    var q = $("search").value.toLocaleLowerCase("tr");
+    document.querySelectorAll("#userList .person").forEach(function (p) {
+      p.style.display = p.textContent.toLocaleLowerCase("tr").indexOf(q) > -1 ? "flex" : "none";
+    });
+  }
+  $("search").addEventListener("input", applySearch);
+
+  /* ---------- Sohbet ---------- */
+  function chatId(otherId) { return [me.username, otherId.slice(2)].sort().join("|"); }
+  var unsubChat = null;
+  var chatMsgs = [];
+  function subscribeChat(c) {
+    if (unsubChat) { unsubChat(); unsubChat = null; }
+    chatMsgs = [];
+    unsubChat = onSnapshot(
+      query(collection(db, "chats", chatId(c.id), "messages"), orderBy("t")),
+      function (snap) {
+        chatMsgs = snap.docs.map(function (d) { return d.data(); });
+        if (activeId === c.id && me) renderMessages(c);
+      },
+      function () { chatNote("Mesajlar yüklenemedi. İnternetini kontrol et."); }
+    );
+  }
+
+  function selectChat(c) {
+    showFeed(false);
+    activeId = c.id;
+    $("chatName").textContent = c.name;
+    $("messageInput").disabled = false;
+    $("appScreen").classList.add("chat-open");
+    document.querySelectorAll("#userList .person").forEach(function (p) {
+      p.classList.toggle("active", p.dataset.id === c.id);
+    });
+    subscribeChat(c);
+    renderMessages(c);
+  }
+
+  function renderMessages(c) {
+    var box = $("messages");
+    box.innerHTML = "";
+    var msgs = chatMsgs;
+    if (!msgs.length) {
+      var e = document.createElement("div");
+      e.className = "empty";
+      e.textContent = c.name + " ile sohbet başlatıldı. İlk mesajı sen yaz.";
+      box.appendChild(e);
+      return;
+    }
+    msgs.forEach(function (m) {
+      var b = document.createElement("div");
+      b.className = "message" + (m.from === "u:" + me.username ? " mine" : "");
+      fillBubble(b, m);
+      var t = document.createElement("small");
+      t.textContent = new Date(m.t).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+      b.appendChild(t);
+      box.appendChild(b);
+    });
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function currentContact() {
+    return contacts().filter(function (c) { return c.id === activeId; })[0];
+  }
+
+  function sendMessage() { sendPayload({}); }
+  function sendPayload(extra) {
+    extra = extra || {};
+    var text = extra.audio ? "" : $("messageInput").value.trim();
+    var c = currentContact();
+    if ((!text && !extra.image && !extra.audio) || !c) return;
+    addDoc(collection(db, "chats", chatId(c.id), "messages"), {
+      from: "u:" + me.username,
+      text: text,
+      image: extra.image || null,
+      audio: extra.audio || null,
+      t: Date.now()
+    }).catch(function () { chatNote("Mesaj gönderilemedi. İnternetini kontrol et."); });
+    if (!extra.audio) $("messageInput").value = "";
+  }
+
+  $("messageForm").addEventListener("submit", function (e) { e.preventDefault(); sendMessage(); });
+  $("sendBtn").addEventListener("click", function (e) { e.preventDefault(); sendMessage(); });
+  $("messageInput").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); sendMessage(); }
+  });
+
+  /* ---------- Akış (haber + fotoğraf) ---------- */
+  var photoData = null;
+
+  function showView(v) {
+  var a = $("appScreen");
+  a.classList.toggle("feed-open", v === "feed");
+  a.classList.toggle("profile-open", v === "profile");
+  a.classList.toggle("explore-open", v === "explore");
+  if (v !== "chats") a.classList.remove("chat-open");
+  $("tabChats").classList.toggle("active", v === "chats");
+  $("tabFeed").classList.toggle("active", v === "feed");
+  $("tabProfile").classList.toggle("active", v === "profile");
+  $("tabExplore").classList.toggle("active", v === "explore");
+}
+function showFeed(on) { showView(on ? "feed" : "chats"); }
+
+  function compress(file, maxDim, q) {
+  return new Promise(function (resolve, reject) {
+    var url = null;
+    try { url = URL.createObjectURL(file); }
+    catch (e) { compressLegacy(file, maxDim, q).then(resolve, reject); return; }
+    var img = new Image();
+    img.onload = function () {
+      var iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+      var k = Math.min(1, maxDim / Math.max(iw, ih));
+      var w = Math.max(1, Math.round(iw * k)), h = Math.max(1, Math.round(ih * k));
+      var c = document.createElement("canvas");
+      c.width = w; c.height = h;
+      var ctx = c.getContext("2d");
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      try { resolve(c.toDataURL("image/jpeg", q)); } catch (e) { reject(e); }
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); compressLegacy(file, maxDim, q).then(resolve, reject); };
+    img.src = url;
+  });
+}
+
+function compressLegacy(file, maxDim, q) {
+    return new Promise(function (resolve, reject) {
+      var r = new FileReader();
+      r.onerror = function () { reject(new Error("read")); };
+      r.onload = function () {
+        var img = new Image();
+        img.onerror = function () { reject(new Error("img")); };
+        img.onload = function () {
+          var k = Math.min(1, maxDim / Math.max(img.width, img.height));
+          var w = Math.round(img.width * k), h = Math.round(img.height * k);
+          var c = document.createElement("canvas");
+          c.width = w; c.height = h;
+          c.getContext("2d").drawImage(img, 0, 0, w, h);
+          resolve(c.toDataURL("image/jpeg", q));
+        };
+        img.src = r.result;
+      };
+      r.readAsDataURL(file);
+    });
+  }
+
+  function clearPhoto() {
+    photoData = null;
+    $("postPreview").classList.add("hidden");
+    $("postPreview").removeAttribute("src");
+    $("removePhoto").classList.add("hidden");
+  }
+
+  function fmtTime(ms) {
+    return new Date(ms).toLocaleString("tr-TR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  }
+
+  function renderExplore() {
+  if (!exploreCtx) return;
+  var q = $("exploreSearch").value.toLocaleLowerCase("tr");
+  var list = exploreCtx.posts.filter(function (p) {
+    return p.uid !== exploreCtx.myId && ((p.name || "") + " " + (p.text || "")).toLocaleLowerCase("tr").indexOf(q) > -1;
+  });
+  renderPosts(list, exploreCtx.myId, exploreCtx.onLike, function () {}, "exploreList");
+}
+var exploreCtx = null;
+
+function renderPosts(posts, myId, onLike, onDelete, boxId) {
+    var main = !boxId;
+    if (main) exploreCtx = { posts: posts, myId: myId, onLike: onLike };
+    var box = $(boxId || "postList");
+    box.innerHTML = "";
+    if (!posts.length) {
+      var e = document.createElement("div");
+      e.className = "empty";
+      e.textContent = main ? "Henüz paylaşım yok. İlk paylaşımı sen yap." : "Başkalarının paylaşımı yok ya da aramana uyan bir şey bulunamadı.";
+      box.appendChild(e);
+      if (main) renderExplore();
+      return;
+    }
+    posts.forEach(function (p) {
+      var el = document.createElement("div");
+      el.className = "post";
+      var head = document.createElement("div");
+      head.className = "post-head";
+      var av = document.createElement("div");
+      av.className = "avatar";
+      av.textContent = (p.name || "?").charAt(0).toLocaleUpperCase("tr");
+      var who = document.createElement("div");
+      var nm = document.createElement("strong");
+      nm.textContent = p.name || "Kullanıcı";
+      var tm = document.createElement("small");
+      tm.textContent = fmtTime(p.ts);
+      who.append(nm, tm);
+      head.append(av, who);
+      el.appendChild(head);
+      if (p.text) {
+        var t = document.createElement("div");
+        t.className = "post-text";
+        t.textContent = p.text;
+        el.appendChild(t);
+      }
+      if (p.image && String(p.image).indexOf("data:image/") === 0) {
+        var im = document.createElement("img");
+        im.className = "post-img";
+        im.alt = "Fotoğraf";
+        im.src = p.image;
+        el.appendChild(im);
+      }
+      var acts = document.createElement("div");
+      acts.className = "post-actions";
+      var liked = p.likes.indexOf(myId) > -1;
+      var lb = document.createElement("button");
+      lb.type = "button";
+      lb.className = liked ? "liked" : "";
+      lb.textContent = (liked ? "♥ " : "♡ ") + p.likes.length;
+      lb.onclick = function () { onLike(p, liked); };
+      acts.appendChild(lb);
+      if (p.uid === myId) {
+        var del = document.createElement("button");
+        del.type = "button";
+        del.textContent = "Sil";
+        var armed = false;
+        del.onclick = function () {
+          if (!armed) {
+            armed = true;
+            del.textContent = "Emin misin?";
+            setTimeout(function () { armed = false; del.textContent = "Sil"; }, 3000);
+          } else { onDelete(p); }
+        };
+        acts.appendChild(del);
+      }
+      el.appendChild(acts);
+      box.appendChild(el);
+    });
+  if (main) renderExplore();
+  }
+
+  function renderProfile(name, sub, posts, myId) {
+  $("profAvatar").textContent = (name || "?").charAt(0).toLocaleUpperCase("tr");
+  $("profName").textContent = name;
+  $("profSub").textContent = sub;
+  var mine = posts.filter(function (p) { return p.uid === myId; });
+  $("statPosts").textContent = mine.length;
+  $("statLikes").textContent = mine.reduce(function (n, p) { return n + p.likes.length; }, 0);
+}
+
+/* ---------- Sohbette fotoğraf ve sesli mesaj ---------- */
+var rec = null;
+var chatSendExtra = null;
+
+function chatNote(msg) {
+  var n = $("chatNote");
+  n.textContent = msg;
+  n.classList.remove("hidden");
+  clearTimeout(chatNote.t);
+  chatNote.t = setTimeout(function () { n.classList.add("hidden"); }, 4500);
+}
+
+function fmtDur(s) { return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2); }
+
+function fillBubble(b, m) {
+  if (m.image && String(m.image).indexOf("data:image/") === 0) {
+    var im = document.createElement("img");
+    im.className = "msg-img"; im.alt = "Fotoğraf"; im.src = m.image;
+    b.appendChild(im);
+  }
+  if (m.audio && String(m.audio).indexOf("data:audio/") === 0) {
+    var au = document.createElement("audio");
+    au.className = "msg-audio"; au.controls = true; au.preload = "metadata"; au.src = m.audio;
+    b.appendChild(au);
+  }
+  if (m.text) {
+    var t = document.createElement("div");
+    t.textContent = m.text;
+    b.appendChild(t);
+  }
+}
+
+function recMime() {
+  var c = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg;codecs=opus"];
+  if (!window.MediaRecorder) return "";
+  for (var i = 0; i < c.length; i++) { if (MediaRecorder.isTypeSupported(c[i])) return c[i]; }
+  return "";
+}
+
+function stopRec(send) {
+  if (!rec) return;
+  rec.send = send;
+  if (rec.mr.state !== "inactive") rec.mr.stop();
+}
+
+function startRec() {
+  if (rec) return;
+  if (micBlockedByPolicy()) { showPerm("frame"); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+    nativeRecord();
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+    var mime = recMime();
+    var opts = { audioBitsPerSecond: 24000 };
+    if (mime) opts.mimeType = mime;
+    var mr = new MediaRecorder(stream, opts);
+    var r = rec = { mr: mr, stream: stream, chunks: [], start: Date.now(), send: false, timer: null, mime: mr.mimeType || mime };
+    mr.ondataavailable = function (e) { if (e.data && e.data.size) r.chunks.push(e.data); };
+    mr.onstop = function () {
+      clearInterval(r.timer);
+      r.stream.getTracks().forEach(function (t) { t.stop(); });
+      rec = null;
+      $("recBar").classList.add("hidden");
+      $("messageForm").classList.remove("hidden");
+      if (!r.send || !r.chunks.length) return;
+      var blob = new Blob(r.chunks, { type: r.mime || "audio/webm" });
+      if (blob.size > 650000) { chatNote("Ses çok uzun. Daha kısa bir mesaj kaydet."); return; }
+      var fr = new FileReader();
+      fr.onload = function () { chatSendExtra({ audio: fr.result }); };
+      fr.readAsDataURL(blob);
+    };
+    mr.start();
+    $("messageForm").classList.add("hidden");
+    $("recBar").classList.remove("hidden");
+    $("recTime").textContent = "0:00";
+    r.timer = setInterval(function () {
+      var s = Math.floor((Date.now() - r.start) / 1000);
+      $("recTime").textContent = fmtDur(s);
+      if (s >= 60) stopRec(true);
+    }, 250);
+  }).catch(function (err) {
+    if (err && err.name === "NotFoundError") chatNote("Bu cihazda mikrofon bulunamadı.");
+    else nativeRecord();
+  });
+}
+
+var permWatchStatus = null;
+var permTimer = null;
+function watchPerm() {
+  clearInterval(permTimer);
+  permTimer = setInterval(function () {
+    if ($("permPanel").classList.contains("hidden")) { clearInterval(permTimer); return; }
+    micState().then(permGranted);
+  }, 1000);
+  if (!navigator.permissions || !navigator.permissions.query || permWatchStatus) return;
+  navigator.permissions.query({ name: "microphone" }).then(function (s) {
+    permWatchStatus = s;
+    s.onchange = function () { permGranted(s.state); };
+  }).catch(function () {});
+}
+
+function permGranted(state) {
+  if (state === "granted" && !$("permPanel").classList.contains("hidden")) {
+    $("permPanel").classList.add("hidden");
+    startRec();
+  }
+}
+
+function micBlockedByPolicy() {
+  try {
+    var pp = document.permissionsPolicy || document.featurePolicy;
+    return !!(pp && pp.allowsFeature && !pp.allowsFeature("microphone"));
+  } catch (e) { return false; }
+}
+
+function micState() {
+  if (!window.MediaRecorder || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || window.isSecureContext === false) {
+    return Promise.resolve("unsupported");
+  }
+  if (navigator.permissions && navigator.permissions.query) {
+    return navigator.permissions.query({ name: "microphone" })
+      .then(function (s) { return s.state; })
+      .catch(function () { return "prompt"; });
+  }
+  return Promise.resolve("prompt");
+}
+
+function showPerm(state) {
+  var allow = $("permAllow"), steps = $("permSteps");
+  steps.classList.add("hidden");
+  allow.classList.remove("hidden");
+  if (state === "frame") {
+    $("permTitle").textContent = "Mikrofon bu çerçevede engelli";
+    $("permText").textContent = "Bu sayfa başka bir sitenin (claude.ai) içinde gösteriliyor ve o site mikrofona izin vermiyor. Sesli mesaj için uygulamayı kendi adresinden aç (ör. Netlify'a yükleyip).";
+    allow.classList.add("hidden");
+  } else if (state === "unsupported") {
+    $("permTitle").textContent = "Sesli mesaj burada çalışmıyor";
+    $("permText").textContent = "Bu sayfa uygulama içi önizlemede ya da dosya olarak açık. Burada telefon mikrofon izni sormuyor ve ayarlarda da bu site görünmüyor. Sesli mesaj için siteyi Chrome'da, https:// ile başlayan bir adresten (ör. Netlify) aç.";
+    allow.classList.add("hidden");
+  } else if (state === "denied") {
+    $("permTitle").textContent = "Mikrofon izni kapalı";
+    $("permText").textContent = "Telefon bu siteye mikrofon izni vermiyor. Tarayıcılar ayarları siteden açtırmadığı için izni kendin açman gerekiyor:";
+    steps.innerHTML = "";
+    ["Adres çubuğunun solundaki 🔒 veya ⓘ simgesine dokun.",
+     "İzinler > Mikrofon seçeneğini İzin ver yap.",
+     "Buraya dönünce izin kendiliğinden algılanır ve kayıt başlar. Başlamazsa Tekrar dene'ye bas. Uygulama içi önizlemedeysen siteyi Chrome'da aç."].forEach(function (x) {
+      var li = document.createElement("li");
+      li.textContent = x;
+      steps.appendChild(li);
+    });
+    steps.classList.remove("hidden");
+    allow.textContent = "Tekrar dene";
+  } else {
+    $("permTitle").textContent = "Mikrofon izni";
+    $("permText").textContent = "Sesli mesaj göndermek için mikrofonunu kullanmamıza izin vermelisin. İzin ver'e dokununca telefon sana soracak.";
+    allow.textContent = "İzin ver";
+  }
+  $("permPanel").classList.remove("hidden");
+  watchPerm();
+}
+
+function requestMic() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { showPerm("unsupported"); return; }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+    stream.getTracks().forEach(function (t) { t.stop(); });
+    $("permPanel").classList.add("hidden");
+    startRec();
+  }).catch(function () { showPerm("denied"); });
+}
+
+function askMic() {
+  micState().then(function (st) {
+    if (st === "granted") startRec(); else showPerm(st);
+  });
+}
+
+function recordingSupported() {
+  return !!(window.MediaRecorder && navigator.mediaDevices && navigator.mediaDevices.getUserMedia &&
+    window.isSecureContext !== false);
+}
+
+function nativeRecord() {
+  showPerm(recordingSupported() ? "denied" : "unsupported");
+}
+
+function bindChatMedia(ready, sendExtra, maxDim, q) {
+  chatSendExtra = sendExtra;
+  var onPhoto = function (e) {
+    $("photoSheet").classList.add("hidden");
+    var inp = e.target;
+    var f = inp.files[0];
+    if (!f) return;
+    if (!ready()) { chatNote("Önce bir kişi seç."); inp.value = ""; return; }
+    compress(f, maxDim, q)
+      .then(function (d) { return d.length > 700000 ? compress(f, Math.round(maxDim * 0.7), q - 0.2) : d; })
+      .then(function (d) {
+        if (d.length > 850000) throw new Error("big");
+        sendExtra({ image: d });
+      })
+      .catch(function () { chatNote("Fotoğraf gönderilemedi. Başka bir fotoğraf dene."); })
+      .then(function () { inp.value = ""; });
+  };
+  $("chatFile").addEventListener("change", onPhoto);
+  $("camFile").addEventListener("change", onPhoto);
+  $("photoBtn").addEventListener("click", function () {
+    if (!ready()) { chatNote("Önce bir kişi seç."); return; }
+    $("photoSheet").classList.remove("hidden");
+    if (!recordingSupported() || /; wv\)/.test(navigator.userAgent)) $("sheetNote").classList.remove("hidden");
+  });
+  $("sheetClose").addEventListener("click", function () { $("photoSheet").classList.add("hidden"); });
+  $("micBtn").addEventListener("click", function () {
+    if (!ready()) { chatNote("Önce bir kişi seç."); return; }
+    startRec();
+  });
+  $("recCancel").addEventListener("click", function () { stopRec(false); });
+  $("permAllow").addEventListener("click", requestMic);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && !$("permPanel").classList.contains("hidden")) micState().then(permGranted);
+  });
+  $("permClose").addEventListener("click", function () { $("permPanel").classList.add("hidden"); });
+  $("recSend").addEventListener("click", function () { stopRec(true); });
+}
+
+function bindFeedUI(publish, maxDim, q) {
+    $("tabFeed").addEventListener("click", function () { showFeed(true); });
+    $("tabChats").addEventListener("click", function () { showFeed(false); });
+    $("feedBack").addEventListener("click", function () { showFeed(false); });
+  $("tabProfile").addEventListener("click", function () { showView("profile"); });
+  $("tabExplore").addEventListener("click", function () { showView("explore"); });
+  $("exploreSearch").addEventListener("input", renderExplore);
+  $("profLogout").addEventListener("click", function () { $("logoutBtn").click(); });
+    $("removePhoto").addEventListener("click", clearPhoto);
+    $("postBtn").addEventListener("click", publish);
+    $("postFile").addEventListener("change", function (e) {
+      var f = e.target.files[0];
+      if (!f) return;
+      $("postError").textContent = "";
+      compress(f, maxDim, q)
+        .then(function (d) { return d.length > 700000 ? compress(f, Math.round(maxDim * 0.7), q - 0.2) : d; })
+        .then(function (d) {
+          photoData = d;
+          $("postPreview").src = d;
+          $("postPreview").classList.remove("hidden");
+          $("removePhoto").classList.remove("hidden");
+        })
+        .catch(function () { $("postError").textContent = "Fotoğraf eklenemedi. Başka bir fotoğraf dene."; })
+      .then(function () { e.target.value = ""; });
+    });
+  }
+
+  /* Akış: herkesle ortak, çevrimiçi */
+  var allPosts = [];
+  var unsubPosts = null;
+  function loadPosts() { return allPosts; }
+  function startPosts() {
+    if (unsubPosts) unsubPosts();
+    unsubPosts = onSnapshot(
+      query(collection(db, "posts"), orderBy("ts", "desc"), limit(100)),
+      function (snap) {
+        allPosts = snap.docs.map(function (d) { var p = d.data(); p.id = d.id; p.likes = p.likes || []; return p; });
+        refreshFeed();
+      },
+      function () { $("postError").textContent = "Paylaşımlar yüklenemedi. İnternetini kontrol et."; }
+    );
+  }
+  function refreshFeed() {
+    if (!me) return;
+    renderProfile(me.name, "@" + me.username, loadPosts(), me.username);
+    renderPosts(loadPosts(), me.username,
+      function (p, liked) {
+        updateDoc(doc(db, "posts", p.id), { likes: liked ? arrayRemove(me.username) : arrayUnion(me.username) })
+          .catch(function () { $("postError").textContent = "Beğeni kaydedilemedi."; });
+      },
+      function (p) {
+        deleteDoc(doc(db, "posts", p.id)).catch(function () { $("postError").textContent = "Silinemedi."; });
+      });
+  }
+  function publishPost() {
+    var text = $("postText").value.trim();
+    if (!text && !photoData) { $("postError").textContent = "Bir şeyler yaz veya fotoğraf ekle."; return; }
+    $("postError").textContent = "";
+    var id = Date.now() + Math.random().toString(36).slice(2, 6);
+    setDoc(doc(db, "posts", id), { uid: me.username, name: me.name, text: text, image: photoData, ts: Date.now(), likes: [] })
+      .catch(function () { $("postError").textContent = "Paylaşılamadı. İnternetini kontrol et."; });
+    $("postText").value = "";
+    clearPhoto();
+  }
+  bindFeedUI(publishPost, 640, 0.6);
+  bindChatMedia(function () { return !!activeId && !!me; }, sendPayload, 800, 0.6);
+
+  /* Firebase oturumunu açılışta geri yükle */
+  onAuthStateChanged(auth, async function (user) {
+    if (!user) return;
+    try {
+      var profileSnap = await getDoc(doc(db, "users", user.uid));
+      if (!profileSnap.exists()) return;
+      var profile = profileSnap.data();
+      if (!me || me.username !== profile.username) login(profile.username || "kullanici", profile.name || profile.username || "Kullanıcı");
+    } catch (err) {
+      showErr("Profil yüklenemedi: " + (err.message || err));
+    }
+  });
+})();
+</script>
+</body>
+</html>
